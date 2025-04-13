@@ -9,9 +9,9 @@ class DataInput(ABC):
         pass
 
 
-class DataProcessor(ABC):
+class DataTransformer(ABC):
     @abstractmethod
-    def process(self, df: DataFrame) -> DataFrame:
+    def transform(self, df: DataFrame) -> DataFrame:
         """Apply transformations to the input DataFrame"""
         pass
 

@@ -1,6 +1,8 @@
 from etl.utils import spark_utils as su
 from etl.runner import batch_runner as bd
-from etl.impl.dummy import DummyCsvInput, NoOpProcessor, DummyCsvOutput
+import etl.impl.readers as rd
+import etl.impl.writers as wr
+from etl.impl.transformers import NoOpTransformer
 from typing import Dict, Any
 from datetime import datetime
 
@@ -25,10 +27,10 @@ def run(config: Dict[str, Any]):
 
     try:
 
-        reader = DummyCsvInput(source_path)
-        writer = DummyCsvOutput(source_path)
+        reader = rd.CsvInput(source_path)
+        writer = wr.ParquetOutput(destination_path)
 
-        driver = bd.BatchPipelineDriver(spark=spark, reader=reader, processor=NoOpProcessor(), writer=writer)
+        driver = bd.BatchPipelineDriver(spark=spark, reader=reader, transformer=NoOpTransformer(), writer=writer)
 
         driver.run()
 
@@ -42,7 +44,7 @@ if __name__ == "__main__":
     # Example usage (for local testing)
     dummy_config = {
         "source_path": "s3a://nalexx6-dlt-bucket/licenses.csv",  # Replace with your actual source S3 path
-        "destination_path": f"s3a://nalexx6-dlt-bucket/licenses-processed-{cur_timestamp}.csv"  # Replace with your actual destination S3 path
+        "destination_path": f"s3a://nalexx6-dlt-bucket/licenses-processed-{cur_timestamp}"  # Replace with your actual destination S3 path
     }
 
     try:
@@ -50,5 +52,7 @@ if __name__ == "__main__":
         logger.info("Dummy S3 to S3 task completed successfully.")
     except ValueError as e:
         logger.error(f"Error: {e}")
+        raise e
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
+        raise e
