@@ -4,6 +4,10 @@ from etl.impl.dummy import DummyCsvInput, NoOpProcessor, DummyCsvOutput
 from typing import Dict, Any
 from datetime import datetime
 
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 def run(config: Dict[str, Any]):
     """
@@ -43,8 +47,8 @@ if __name__ == "__main__":
 
     try:
         run(dummy_config)
-        print("Dummy S3 to S3 task completed successfully.")
+        logger.info("Dummy S3 to S3 task completed successfully.")
     except ValueError as e:
-        print(f"Error: {e}")
+        logger.error(f"Error: {e}")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        logger.error(f"An unexpected error occurred: {e}")
