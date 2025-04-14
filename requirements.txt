@@ -1,3 +1,5 @@
 
 pyspark==3.4.0
 pytest
+pydantic
+pyyaml

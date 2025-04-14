@@ -1,8 +1,8 @@
 from etl.utils import spark_utils as su
 from etl.runner import batch_runner as bd
-import etl.impl.readers as rd
-import etl.impl.writers as wr
-from etl.impl.transformers import NoOpTransformer
+import etl.impl.readers.readers as rd
+import etl.impl.writers.writers as wr
+from etl.impl.transformers.transformers import NoOpTransformer
 from typing import Dict, Any
 from datetime import datetime
 
@@ -30,7 +30,7 @@ def run(config: Dict[str, Any]):
         reader = rd.CsvInput(source_path)
         writer = wr.ParquetOutput(destination_path)
 
-        driver = bd.BatchPipelineDriver(spark=spark, reader=reader, transformer=NoOpTransformer(), writer=writer)
+        driver = bd.BatchPipelineRunner(spark=spark, reader=reader, transformer=NoOpTransformer(), writer=writer)
 
         driver.run()
 
@@ -46,6 +46,8 @@ if __name__ == "__main__":
         "source_path": "s3a://nalexx6-dlt-bucket/licenses.csv",  # Replace with your actual source S3 path
         "destination_path": f"s3a://nalexx6-dlt-bucket/licenses-processed-{cur_timestamp}"  # Replace with your actual destination S3 path
     }
+
+
 
     try:
         run(dummy_config)

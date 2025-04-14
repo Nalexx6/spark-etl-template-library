@@ -1,0 +1,22 @@
+pipeline:
+  name: "example_s3_to_s3"
+  input:
+    type: "csv"
+    format: "csv"
+    config:
+      path: "s3a://nalexx6-dlt-bucket/licenses.csv"
+      header: true
+      infer_schema: true
+
+  transformations:
+    klass: "etl.impl.transformers.transformers.TimestampTransformer"
+#    - klass: [ "some other class"]
+#      props: "some props"
+
+
+  output:
+    type: "parquet"
+    format: "parquet"
+    config:
+      path: "s3a://nalexx6-dlt-bucket/licenses-processed-1"
+      mode: "append"
