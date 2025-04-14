@@ -1,4 +1,6 @@
-from etl.utils import spark_utils as su, reflection_utils as ru
+import argparse, logging
+
+from etl.utils import spark_utils as su
 from etl.runner import batch_runner as bd
 
 from etl.metadata.parser import load_pipeline_metadata
@@ -6,11 +8,16 @@ from etl.impl.readers.reader_factory import create_input_connector
 from etl.impl.writers.writer_factory import create_output_connector
 from etl.impl.transformers.transformers_factory import create_transformer
 
-from etl.impl.transformers.transformers import NoOpTransformer
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
 
-    metadata = load_pipeline_metadata("examples/dummy_test.yaml")
+    parser = argparse.ArgumentParser(description="Run ETL pipeline from config")
+    parser.add_argument("--config", required=True, help="Path to YAML pipeline config file.")
+    args = parser.parse_args()
+
+    metadata = load_pipeline_metadata(args.config)
 
     input_obj = create_input_connector(metadata.input.type, metadata.input.config)
     output_obj = create_output_connector(metadata.output.type, metadata.output.config)
@@ -20,4 +27,12 @@ if __name__ == "__main__":
 
     driver = bd.BatchPipelineRunner(spark=spark, reader=input_obj, transformer=transformer_obj, writer=output_obj)
 
-    driver.run()
+    try:
+        driver.run()
+        logger.info(f"{metadata.name} task completed successfully.")
+    except ValueError as e:
+        logger.error(f"Error: {e}")
+        raise e
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {e}")
+        raise e
