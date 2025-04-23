@@ -1,9 +1,9 @@
-from etl.interfaces import DataInput, DataTransformer, DataOutput
+from etl.interfaces import DataReader, DataTransformer, DataOutput
 from pyspark.sql import SparkSession
 
 
 class BatchPipelineRunner:
-    def __init__(self, spark: SparkSession, reader: DataInput, transformer: DataTransformer, writer: DataOutput):
+    def __init__(self, spark: SparkSession, reader: DataReader, transformer: DataTransformer, writer: DataOutput):
         self.spark = spark
         self.reader = reader
         self.transformer = transformer

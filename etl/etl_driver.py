@@ -4,7 +4,7 @@ from etl.utils import spark_utils as su
 from etl.runner import batch_runner as bd
 
 from etl.metadata.parser import load_pipeline_metadata
-from etl.impl.readers.reader_factory import create_input_connector
+from etl.impl.readers.reader_factory import create_reader
 from etl.impl.writers.writer_factory import create_output_connector
 from etl.impl.transformers.transformers_factory import create_transformer
 
@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     metadata = load_pipeline_metadata(args.config)
 
-    input_obj = create_input_connector(metadata.input.type, metadata.input.config)
+    input_obj = create_reader(metadata.input.type, metadata.input.format, metadata.input.config)
     output_obj = create_output_connector(metadata.output.type, metadata.output.config)
     transformer_obj = create_transformer(metadata.transformations)
 

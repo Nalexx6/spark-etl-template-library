@@ -3,8 +3,8 @@ from typing import List, Optional, Literal, Dict, Union
 
 
 class InputConfig(BaseModel):
-    type: Literal["s3", "hdfs", "kafka", "csv", "parquet"]
-    format: Optional[str]
+    type: Literal["s3", "hdfs", "kafka"]
+    format: Literal["csv", "parquet"]
     config: Dict
 
 

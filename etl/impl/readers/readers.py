@@ -1,28 +1,24 @@
-from etl.interfaces import DataInput
-import etl.sources as s
+from etl.interfaces import DataInput, DataReader
 from pyspark.sql import DataFrame, SparkSession
+
+
+from etl.impl.inputs.inputs_factory import create_input_connector
 
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
-class CsvInput(DataInput, s.CSVSourceMixin):
-
-    def read(self, spark: SparkSession) -> DataFrame:
-        logger.info(f"Reading csv file from path {self.path} with options {self.options} ")
-        df = spark.read.csv(self.path, **self.options)
-        return df
-
-
-class ParquetInput(DataInput, s.ParquetSourceMixin):
-    def read(self, spark: SparkSession) -> DataFrame:
-        logger.info(f"Reading parquet file from path {self.path} with options {self.options} ")
-        df = spark.read.parquet(self.path, **self.options)
-        return df
-
 # TODO: S3/Delta/Iceberg input
 
+
+class S3Reader(DataReader):
+    def __init__(self, input_format: str, bucket: str, object_key: str, **kwargs):
+        path = f"s3a://{bucket}/{object_key}"
+        logger.info(f"Initializing {input_format} input with {path} path")
+        self.data_input = create_input_connector(input_format=input_format, path=path, **kwargs)
+
+    def read(self, spark) -> DataFrame:
+        return self.data_input.read(spark)
 
 class KafkaInput(DataInput):
     def __init__(self, servers: str, topic: str, starting_offsets="earliest", options: dict = None):

@@ -1,10 +1,12 @@
 pipeline:
   name: "example_s3_to_s3"
   input:
-    type: "csv"
+    type: "s3"
     format: "csv"
     config:
-      path: "s3a://nalexx6-dlt-bucket/licenses.csv"
+      bucket: "nalexx6-dlt-bucket"
+      object_key: "licenses.csv"
+#      path: "s3a://nalexx6-dlt-bucket/licenses.csv"
       header: true
       infer_schema: true
 
