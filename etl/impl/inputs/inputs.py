@@ -9,13 +9,14 @@ logger = logging.getLogger(__name__)
 
 class CsvInput(DataInput, s.CSVSourceMixin):
 
-    def __init__(self, path: str, header: bool = True, infer_schema: bool = True, options: dict = None):
+    def __init__(self, path: str, header: bool = True, infer_schema: bool = True, **kwargs):
         base_options = {
             "header": header,
             "inferSchema": infer_schema,
         }
-        if options:
-            base_options.update(options)
+        # TODO: fix
+        # if kwargs:
+        #     base_options.update(kwargs)
         super().__init__(path, options=base_options)
 
     def read(self, spark: SparkSession) -> DataFrame:

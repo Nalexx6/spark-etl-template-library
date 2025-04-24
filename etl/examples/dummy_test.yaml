@@ -6,7 +6,10 @@ pipeline:
     config:
       bucket: "nalexx6-dlt-bucket"
       object_key: "licenses.csv"
-#      path: "s3a://nalexx6-dlt-bucket/licenses.csv"
+      post_read_select_exprs:
+        - "Hvfhs_license_num as licence_id"
+        - "license as license_name"
+      post_read_filter_expr: "license_name != 'Juno'"
       header: true
       infer_schema: true
 

@@ -1,8 +1,8 @@
 from etl.interfaces import DataReader
-import etl.impl.readers.readers as rd
+from etl.impl.readers.batch.s3_data_reader import S3Reader
 
 INPUT_CONNECTOR_REGISTRY = {
-    "s3": rd.S3Reader,
+    "s3": S3Reader,
     # TODO: refactor to add
     # "s3": S3Input,
     # "kafka": KafkaInput,
