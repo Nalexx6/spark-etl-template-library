@@ -5,7 +5,7 @@ from etl.runner import batch_runner as bd
 
 from etl.metadata.parser import load_pipeline_metadata
 from etl.impl.readers.reader_factory import create_reader
-from etl.impl.writers.writer_factory import create_output_connector
+from etl.impl.writers.writer_factory import create_writer
 from etl.impl.transformers.transformers_factory import create_transformer
 
 logging.basicConfig(level=logging.INFO)
@@ -19,13 +19,13 @@ if __name__ == "__main__":
 
     metadata = load_pipeline_metadata(args.config)
 
-    input_obj = create_reader(metadata.input.type, metadata.input.format, metadata.input.config)
-    output_obj = create_output_connector(metadata.output.type, metadata.output.config)
+    reader_obj = create_reader(metadata.input.type, metadata.input.format, metadata.input.config)
     transformer_obj = create_transformer(metadata.transformations)
+    writer_obj = create_writer(metadata.output.type, metadata.output.format, metadata.output.config)
 
     spark = su.create_spark_session(metadata.name, local=True)
 
-    driver = bd.BatchPipelineRunner(spark=spark, reader=input_obj, transformer=transformer_obj, writer=output_obj)
+    driver = bd.BatchPipelineRunner(spark=spark, reader=reader_obj, transformer=transformer_obj, writer=writer_obj)
 
     try:
         driver.run()

@@ -1,35 +1,20 @@
-from etl.interfaces import DataOutput
+from etl.interfaces import DataOutput, DataWriter
+from etl.impl.outputs.outputs_factory import create_output_connector
 import etl.sources as s
 from pyspark.sql import DataFrame
 
 import logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class CsvOutput(DataOutput, s.CSVSinkMixin):
-    def write(self, df: DataFrame) -> None:
-        logger.info(f"Writing csv file to path {self.path} with options {self.options}")
-        df.write.mode(self.mode).csv(self.path, header=True)
+class S3Writer(DataWriter):
 
-
-class ParquetOutput(DataOutput, s.ParquetSinkMixin):
-    def write(self, df: DataFrame) -> None:
-        logger.info(f"Writing parquet file to path {self.path} with options {self.options}")
-        df.write.mode(self.mode).parquet(self.path, **self.options)
-
-
-class KafkaOutput(DataOutput):
-    def __init__(self, servers: str, topic: str, options: dict = None):
-        self.servers = servers
-        self.topic = topic
-        self.options = options or {}
+    def __init__(self, output_format: str, bucket: str, object_key: str, **kwargs):
+        path = f"s3a://{bucket}/{object_key}"
+        logger.info(f"Initializing {output_format} output connector with {path} path")
+        self.data_output = create_output_connector(output_format=output_format, path=path, **kwargs)
 
     def write(self, df: DataFrame) -> None:
-        df.selectExpr("CAST(value AS STRING)") \
-          .write \
-          .format("kafka") \
-          .option("kafka.bootstrap.servers", self.servers) \
-          .option("topic", self.topic) \
-          .options(**self.options) \
-          .save()
+        return self.data_output.write(df)

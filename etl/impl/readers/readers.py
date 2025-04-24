@@ -14,11 +14,12 @@ logger = logging.getLogger(__name__)
 class S3Reader(DataReader):
     def __init__(self, input_format: str, bucket: str, object_key: str, **kwargs):
         path = f"s3a://{bucket}/{object_key}"
-        logger.info(f"Initializing {input_format} input with {path} path")
+        logger.info(f"Initializing {input_format} input connector with {path} path")
         self.data_input = create_input_connector(input_format=input_format, path=path, **kwargs)
 
     def read(self, spark) -> DataFrame:
         return self.data_input.read(spark)
+
 
 class KafkaInput(DataInput):
     def __init__(self, servers: str, topic: str, starting_offsets="earliest", options: dict = None):

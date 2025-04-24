@@ -1,17 +1,14 @@
-from etl.interfaces import DataOutput
+from etl.interfaces import DataWriter
 import etl.impl.writers.writers as wr
 
-OUTPUT_CONNECTOR_REGISTRY = {
-    "csv": wr.CsvOutput,
-    "parquet": wr.ParquetOutput,
-    # TODO:
-    # "s3": S3Output,
-    # "kafka": KafkaOutput,
-    # "hdfs": HDFSOutput,
+WRITER_REGISTRY = {
+    "s3": wr.S3Writer,
+    # TODO: refactor to add
 }
 
-def create_output_connector(output_type: str, config: dict) -> DataOutput:
-    connector_cls = OUTPUT_CONNECTOR_REGISTRY.get(output_type.lower())
+
+def create_writer(writer_type: str, output_format: str, config: dict) -> DataWriter:
+    connector_cls = WRITER_REGISTRY.get(writer_type.lower())
     if not connector_cls:
-        raise ValueError(f"Unsupported output connector type: {output_type}")
-    return connector_cls(**config)
+        raise ValueError(f"Unsupported input connector type: {writer_type}")
+    return connector_cls(output_format=output_format, **config)

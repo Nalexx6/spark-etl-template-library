@@ -17,8 +17,9 @@ pipeline:
 
 
   output:
-    type: "parquet"
+    type: "s3"
     format: "parquet"
     config:
-      path: "s3a://nalexx6-dlt-bucket/licenses-processed-1"
+      bucket: "nalexx6-dlt-bucket"
+      object_key: "licenses-processed-1"
       mode: "append"
