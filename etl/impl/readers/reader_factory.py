@@ -1,13 +1,12 @@
 from etl.interfaces import DataReader
 from etl.metadata.schema import InputConfig
 from etl.impl.readers.batch.s3_data_reader import S3Reader
+from etl.impl.readers.batch.hdfs_data_reader import HdfsReader
+
 
 INPUT_CONNECTOR_REGISTRY = {
     "s3": S3Reader,
-    # TODO: refactor to add
-    # "s3": S3Input,
-    # "kafka": KafkaInput,
-    # "hdfs": HDFSInput,
+    "hdfs": HdfsReader
 }
 
 

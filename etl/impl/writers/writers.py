@@ -26,3 +26,13 @@ class S3Writer(DataWriter):
 
     def write(self, df: DataFrame) -> None:
         return self.data_output.write(df)
+
+
+class HdfsWriter(DataWriter):
+    def __init__(self, server_url: str, path: str, output_format: str, output_config: dict):
+        path = f"hdfs://{server_url}/{path}"
+        logger.info(f"Initializing {output_format} output connector with {path} path")
+        self.data_output = create_output_connector(output_format=output_format, path=path, **output_config)
+
+    def write(self, df: DataFrame) -> None:
+        return self.data_output.write(df)

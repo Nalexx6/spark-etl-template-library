@@ -1,0 +1,34 @@
+pipeline:
+  name: "example_hdfs_to_hdfs"
+
+  reader:
+    type: "hdfs"
+    config:
+      server_url: "localhost:8020"
+      path: "/user/moleksiienko/licences.csv"
+      post_read_select_exprs:
+        - "Hvfhs_license_num as licence_id"
+        - "license as license_name"
+      post_read_filter_expr: "license_name != 'Uber'"
+    input:
+      format: "csv"
+      config:
+        header: true
+        infer_schema: true
+
+  transformations:
+    - klass: "etl.impl.transformers.transformers.GroupByFirstTransformer"
+      props:
+        grouping_key: "licence_id"
+        agg_column: "license_name"
+    - klass: "etl.impl.transformers.transformers.TimestampTransformer"
+
+  writer:
+    type: "hdfs"
+    config:
+      server_url: "localhost:8020"
+      path: "/user/moleksiienko/licences-processed"
+    output:
+      format: "parquet"
+      config:
+        mode: "append"
