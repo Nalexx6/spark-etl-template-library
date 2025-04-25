@@ -1,8 +1,8 @@
 pipeline:
   name: "example_s3_to_s3"
-  input:
+
+  reader:
     type: "s3"
-    format: "csv"
     config:
       bucket: "nalexx6-dlt-bucket"
       object_key: "licenses.csv"
@@ -10,19 +10,23 @@ pipeline:
         - "Hvfhs_license_num as licence_id"
         - "license as license_name"
       post_read_filter_expr: "license_name != 'Juno'"
-      header: true
-      infer_schema: true
+    input:
+      format: "csv"
+      config:
+        header: true
+        infer_schema: true
 
   transformations:
     klass: "etl.impl.transformers.transformers.TimestampTransformer"
 #    - klass: [ "some other class"]
 #      props: "some props"
 
-
-  output:
+  writer:
     type: "s3"
-    format: "parquet"
     config:
       bucket: "nalexx6-dlt-bucket"
       object_key: "licenses-processed-1"
-      mode: "append"
+    output:
+      format: "parquet"
+      config:
+        mode: "append"

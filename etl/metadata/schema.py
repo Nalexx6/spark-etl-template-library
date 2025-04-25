@@ -1,17 +1,27 @@
 from pydantic import BaseModel
-from typing import List, Optional, Literal, Dict, Union
+from typing import List, Optional, Literal, Dict
 
 
 class InputConfig(BaseModel):
-    type: Literal["s3", "hdfs", "kafka"]
     format: Literal["csv", "parquet"]
     config: Dict
 
 
-class OutputConfig(BaseModel):
-    type: Literal["s3", "hdfs", "kafka", "redshift", "cassandra", "csv", "parquet"]
-    format: Optional[str]
+class ReaderConfig(BaseModel):
+    type: Literal["s3", "hdfs", "kafka"]
     config: Dict
+    input: InputConfig
+
+
+class OutputConfig(BaseModel):
+    format: Literal["csv", "parquet"]
+    config: Dict
+
+
+class WriterConfig(BaseModel):
+    type: Literal["s3", "hdfs", "kafka", "redshift", "cassandra"]
+    config: Dict
+    output: OutputConfig
 
 
 class TransformerConfig(BaseModel):
@@ -21,7 +31,7 @@ class TransformerConfig(BaseModel):
 
 class PipelineMetadata(BaseModel):
     name: str
-    input: InputConfig
+    reader: ReaderConfig
     # TODO: support chain of transformers
     transformations: Optional[TransformerConfig]
-    output: OutputConfig
+    writer: WriterConfig

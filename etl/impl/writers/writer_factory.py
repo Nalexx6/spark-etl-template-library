@@ -7,8 +7,8 @@ WRITER_REGISTRY = {
 }
 
 
-def create_writer(writer_type: str, output_format: str, config: dict) -> DataWriter:
+def create_writer(writer_type: str, writer_config: dict, output_format: str, output_config: dict) -> DataWriter:
     connector_cls = WRITER_REGISTRY.get(writer_type.lower())
     if not connector_cls:
         raise ValueError(f"Unsupported input connector type: {writer_type}")
-    return connector_cls(output_format=output_format, **config)
+    return connector_cls(output_format=output_format, output_config=output_config, **writer_config)
