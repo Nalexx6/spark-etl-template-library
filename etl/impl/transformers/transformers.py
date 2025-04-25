@@ -19,6 +19,14 @@ class TimestampTransformer(DataTransformer):
         return df_tr
 
 
+class DateTransformer(DataTransformer):
+    def transform(self, df: DataFrame) -> DataFrame:
+        df_tr = df.withColumn("cur_date", f.current_date())
+        df_tr.show()
+
+        return df_tr
+
+
 class GenericTransformer:
 
     # props: dict(str, str),

@@ -17,7 +17,8 @@ pipeline:
         infer_schema: true
 
   transformations:
-    klass: "etl.impl.transformers.transformers.TimestampTransformer"
+    - klass: "etl.impl.transformers.transformers.TimestampTransformer"
+    - klass: "etl.impl.transformers.transformers.DateTransformer"
 #    - klass: [ "some other class"]
 #      props: "some props"
 

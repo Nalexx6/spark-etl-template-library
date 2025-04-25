@@ -33,5 +33,5 @@ class PipelineMetadata(BaseModel):
     name: str
     reader: ReaderConfig
     # TODO: support chain of transformers
-    transformations: Optional[TransformerConfig]
+    transformations: Optional[List[TransformerConfig]]
     writer: WriterConfig
