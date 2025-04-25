@@ -31,19 +31,34 @@ class ParquetInput(DataInput, s.ParquetSourceMixin):
         df = spark.read.parquet(self.path, **self.options)
         return df
 
-
-class KafkaInput(DataInput):
-    def __init__(self, servers: str, topic: str, starting_offsets="earliest", options: dict = None):
-        self.servers = servers
-        self.topic = topic
-        self.starting_offsets = starting_offsets
-        self.options = options or {}
-
-    def read(self, spark: SparkSession) -> DataFrame:
-        return spark.read \
-            .format("kafka") \
-            .option("kafka.bootstrap.servers", self.servers) \
-            .option("subscribe", self.topic) \
-            .option("startingOffsets", self.starting_offsets) \
-            .options(**self.options) \
-            .load()
+# class JsonInput(DataInput):
+#     def __init__(self, servers: str, topic: str, starting_offsets="earliest", options: dict = None):
+#         self.servers = servers
+#         self.topic = topic
+#         self.starting_offsets = starting_offsets
+#         self.options = options or {}
+#
+#     def read(self, spark: SparkSession) -> DataFrame:
+#         return spark.read \
+#             .format("kafka") \
+#             .option("kafka.bootstrap.servers", self.servers) \
+#             .option("subscribe", self.topic) \
+#             .option("startingOffsets", self.starting_offsets) \
+#             .options(**self.options) \
+#             .load()
+#
+# class AvroInput(DataInput):
+#     def __init__(self, servers: str, topic: str, starting_offsets="earliest", options: dict = None):
+#         self.servers = servers
+#         self.topic = topic
+#         self.starting_offsets = starting_offsets
+#         self.options = options or {}
+#
+#     def read(self, spark: SparkSession) -> DataFrame:
+#         return spark.read \
+#             .format("kafka") \
+#             .option("kafka.bootstrap.servers", self.servers) \
+#             .option("subscribe", self.topic) \
+#             .option("startingOffsets", self.starting_offsets) \
+#             .options(**self.options) \
+#             .load()

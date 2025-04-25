@@ -22,12 +22,15 @@ pipeline:
 #    - klass: [ "some other class"]
 #      props: "some props"
 
+#  writer:
+#    type: "s3"
+#    config:
+#      bucket: "nalexx6-dlt-bucket"
+#      object_key: "licenses-processed-1"
+#    output:
+#      format: "parquet"
+#      config:
+#        mode: "append"
+
   writer:
-    type: "s3"
-    config:
-      bucket: "nalexx6-dlt-bucket"
-      object_key: "licenses-processed-1"
-    output:
-      format: "parquet"
-      config:
-        mode: "append"
+    type: console

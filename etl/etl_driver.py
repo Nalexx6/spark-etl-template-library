@@ -20,10 +20,10 @@ if __name__ == "__main__":
     metadata = load_pipeline_metadata(args.config)
 
     reader_obj = create_reader(metadata.reader.type, metadata.reader.config,
-                               metadata.reader.input.format, metadata.reader.input.config)
+                               metadata.reader.input)
     transformer_obj = create_transformers(metadata.transformations)
     writer_obj = create_writer(metadata.writer.type, metadata.writer.config,
-                               metadata.writer.output.format, metadata.writer.output.config)
+                               metadata.writer.output)
 
     spark = su.create_spark_session(metadata.name, local=True)
 

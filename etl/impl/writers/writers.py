@@ -9,6 +9,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+class ConsoleWriter(DataWriter):
+    def __init__(self, **kwargs):
+        pass
+
+    def write(self, df: DataFrame) -> None:
+        df.show(truncate=False)
+
+
 class S3Writer(DataWriter):
 
     def __init__(self, bucket: str, object_key: str, output_format: str, output_config: dict):
