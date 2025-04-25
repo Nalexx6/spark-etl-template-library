@@ -27,6 +27,18 @@ class DateTransformer(DataTransformer):
         return df_tr
 
 
+class GroupByFirstTransformer(DataTransformer):
+
+    def __init__(self, grouping_key: str, agg_column: str):
+        self.grouping_key = grouping_key
+        self.agg_column = agg_column
+
+    def transform(self, df: DataFrame) -> DataFrame:
+        df_tr = df.groupby(self.grouping_key).agg(f.first(col=self.agg_column).alias(self.agg_column))
+
+        return df_tr
+
+
 class GenericTransformer:
 
     # props: dict(str, str),

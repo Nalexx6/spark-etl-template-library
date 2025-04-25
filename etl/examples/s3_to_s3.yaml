@@ -1,5 +1,5 @@
 pipeline:
-  name: "dummy_test"
+  name: "example_s3_to_s3"
 
   reader:
     type: "s3"
@@ -17,12 +17,15 @@ pipeline:
         infer_schema: true
 
   transformations:
-    - klass: "etl.impl.transformers.transformers.GroupByFirstTransformer"
-      props:
-        grouping_key: "licence_id"
-        agg_column: "license_name"
+    - klass: "etl.impl.transformers.transformers.TimestampTransformer"
     - klass: "etl.impl.transformers.transformers.DateTransformer"
 
-
   writer:
-    type: console
+    type: "s3"
+    config:
+      bucket: "nalexx6-dlt-bucket"
+      object_key: "licenses-processed-1"
+    output:
+      format: "parquet"
+      config:
+        mode: "append"
