@@ -14,7 +14,7 @@ class ReaderConfig(BaseModel):
 
 
 class OutputConfig(BaseModel):
-    format: Literal["csv", "parquet"]
+    format: Literal["csv", "parquet", "avro", "json"]
     config: Optional[Dict] = {}
 
 

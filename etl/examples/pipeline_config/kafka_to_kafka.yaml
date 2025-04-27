@@ -1,0 +1,31 @@
+pipeline:
+  name: "example_kafka_to_kafka"
+  reader:
+    type: "kafka"
+    config:
+      servers:
+        - localhost:9092
+      topics:
+        - data_topic
+      post_read_select_exprs:
+#        - "topic"
+#        - "partition"
+#        - "offset"
+#        - "timestamp"
+        - "value.*"
+      post_read_filter_expr: "license_name != 'Juno'"
+    input:
+      format: "json"
+      config:
+        schema_filepath: "./etl/examples/schema_config/licences_json_schema.json"
+
+  writer:
+    type: "kafka"
+    config:
+      servers:
+        - localhost:9092
+      topic: output_topic
+    output:
+      format: "avro"
+      config:
+        schema_filepath: "./etl/examples/schema_config/licences_avro_schema.avsc"

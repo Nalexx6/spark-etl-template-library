@@ -12,7 +12,7 @@ class DataTransformer(ABC):
 class DataWriter(ABC):
 
     @abstractmethod
-    def write(self, df: DataFrame):
+    def write(self, df: DataFrame) -> None:
         pass
 
 

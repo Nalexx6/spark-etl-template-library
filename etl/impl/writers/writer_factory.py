@@ -5,7 +5,8 @@ import etl.impl.writers.writers as wr
 WRITER_REGISTRY = {
     "console": wr.ConsoleWriter,
     "s3": wr.S3Writer,
-    "hdfs": wr.HdfsWriter
+    "hdfs": wr.HdfsWriter,
+    "kafka": wr.KafkaWriter
 }
 
 

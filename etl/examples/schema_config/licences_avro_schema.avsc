@@ -1,0 +1,17 @@
+{
+  "type": "record",
+  "name": "Root",
+  "namespace": "example.avro",
+  "fields": [
+    {
+      "name": "Hvfhs_license_num",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "license",
+      "type": ["null", "string"],
+      "default": null
+    }
+  ]
+}
