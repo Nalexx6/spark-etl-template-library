@@ -18,7 +18,7 @@ class CsvOutput(DataOutput, s.CSVSourceMixin):
         df.write.mode(self.mode).csv(self.path, header=True)
 
 
-class ParquetOutput(DataOutput, s.ParquetSourceMixin):
+class ParquetOutput(DataOutput, s.FileSourceMixin):
 
     def __init__(self, path: str, mode: str = "overwrite", options: dict = None):
         self.mode = mode

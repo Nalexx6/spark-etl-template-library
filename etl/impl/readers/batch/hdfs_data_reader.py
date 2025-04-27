@@ -1,4 +1,3 @@
-from etl.interfaces import DataInput, DataReader
 from etl.impl.readers.batch.batch_data_reader import BatchDataReader
 from pyspark.sql import DataFrame, SparkSession
 

@@ -5,10 +5,11 @@ from pyspark.sql import SparkSession
 
 def create_spark_session(app_name, local=False):
     packages = [
-        # 'org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1',
+        'org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.0',
         # 'org.apache.kafka:kafka-clients:2.8.0',
         # 'org.postgresql:postgresql:42.5.1',
-        'org.apache.hadoop:hadoop-aws:3.3.4'
+        'org.apache.hadoop:hadoop-aws:3.3.4',
+        "org.apache.spark:spark-avro_2.12:3.4.0"
     ]
 
     aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")

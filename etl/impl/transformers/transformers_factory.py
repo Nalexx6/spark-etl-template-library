@@ -3,7 +3,7 @@ from typing import List
 from etl.utils import reflection_utils as ru
 
 from etl.interfaces import DataTransformer
-from etl.metadata.schema import TransformerConfig
+from etl.metadata.pipeline_schema import TransformerConfig
 import etl.impl.transformers.transformers as tr
 
 

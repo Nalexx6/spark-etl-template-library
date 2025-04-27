@@ -1,6 +1,7 @@
 from typing import List
 
-from etl.interfaces import DataReader, DataTransformer, DataWriter
+from etl.impl.readers.reader_interface import DataReader
+from etl.interfaces import DataTransformer, DataWriter
 from pyspark.sql import SparkSession
 
 

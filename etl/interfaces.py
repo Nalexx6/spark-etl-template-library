@@ -2,18 +2,6 @@ from abc import ABC, abstractmethod
 from pyspark.sql import DataFrame, SparkSession
 
 
-class DataReader(ABC):
-
-    @abstractmethod
-    def read(self, spark: SparkSession) -> DataFrame:
-        """
-        Read raw data using the configured reader, apply post-read transformations to it, if needed.
-        Return a Spark DataFrame
-        """
-
-        pass
-
-
 class DataTransformer(ABC):
     @abstractmethod
     def transform(self, df: DataFrame) -> DataFrame:

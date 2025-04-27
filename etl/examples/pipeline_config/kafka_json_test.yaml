@@ -1,0 +1,31 @@
+pipeline:
+  name: "dummy_test"
+  reader:
+    type: "kafka"
+    config:
+      servers:
+        - localhost:9092
+      topics:
+        - data_topic
+      post_read_select_exprs:
+        - "topic"
+        - "partition"
+        - "offset"
+        - "timestamp"
+        - "value.*"
+#      post_read_filter_expr: "license_name != 'Juno'"
+    input:
+      format: "json"
+      config:
+        schema_filepath: "/Users/moleksiienko/University/dlt-deployer/etl/examples/schema_config/licences_example.json"
+
+  transformations:
+#    - klass: "etl.impl.transformers.transformers.GroupByFirstTransformer"
+#      props:
+#        grouping_key: "licence_id"
+#        agg_column: "license_name"
+#    - klass: "etl.impl.transformers.transformers.DateTransformer"
+
+
+  writer:
+    type: console

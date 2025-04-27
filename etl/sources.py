@@ -15,11 +15,6 @@ class CSVSourceMixin(FileSourceMixin):
         super().__init__(path, options=base_options)
 
 
-class ParquetSourceMixin(FileSourceMixin):
-    def __init__(self, path: str, options: dict = None):
-        super().__init__(path, options=options)
-
-
 class KafkaSourceMixin:
     def __init__(self, servers: str, topic: str,  options: dict = None):
         self.servers = servers

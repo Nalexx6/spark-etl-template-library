@@ -1,5 +1,5 @@
 import yaml
-from etl.metadata.schema import PipelineMetadata
+from etl.metadata.pipeline_schema import PipelineMetadata
 
 
 def load_pipeline_metadata(path: str) -> PipelineMetadata:

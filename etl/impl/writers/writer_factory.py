@@ -1,5 +1,5 @@
 from etl.interfaces import DataWriter
-from etl.metadata.schema import OutputConfig
+from etl.metadata.pipeline_schema import OutputConfig
 import etl.impl.writers.writers as wr
 
 WRITER_REGISTRY = {

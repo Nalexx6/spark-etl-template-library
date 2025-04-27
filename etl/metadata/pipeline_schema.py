@@ -3,7 +3,7 @@ from typing import List, Optional, Literal, Dict
 
 
 class InputConfig(BaseModel):
-    format: Literal["csv", "parquet"]
+    format: Literal["csv", "parquet", "avro", "json"]
     config: Optional[Dict] = {}
 
 

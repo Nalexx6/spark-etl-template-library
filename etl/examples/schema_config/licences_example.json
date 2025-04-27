@@ -1,0 +1,7 @@
+{
+  "type": "struct",
+  "fields": [
+    {"name": "Hvfhs_license_num", "type": "string", "nullable": true, "metadata": {}},
+    {"name": "license", "type": "string", "nullable": true, "metadata": {}}
+  ]
+}
