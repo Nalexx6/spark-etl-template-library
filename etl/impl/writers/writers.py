@@ -22,7 +22,7 @@ class ConsoleWriter(DataWriter):
 
 class S3Writer(DataWriter):
 
-    def __init__(self, bucket: str, object_key: str, output_format: str, output_config: dict):
+    def __init__(self, bucket: str, object_key: str, output_format: str, output_config: dict, **kwargs):
         path = f"s3a://{bucket}/{object_key}"
         logger.info(f"Initializing {output_format} output connector with {path} path")
         self.data_output = create_output_connector(output_format=output_format, path=path, **output_config)
@@ -32,7 +32,7 @@ class S3Writer(DataWriter):
 
 
 class HdfsWriter(DataWriter):
-    def __init__(self, server_url: str, path: str, output_format: str, output_config: dict):
+    def __init__(self, server_url: str, path: str, output_format: str, output_config: dict, **kwargs):
         path = f"hdfs://{server_url}/{path}"
         logger.info(f"Initializing {output_format} output connector with {path} path")
         self.data_output = create_output_connector(output_format=output_format, path=path, **output_config)
@@ -44,7 +44,7 @@ class HdfsWriter(DataWriter):
 class KafkaWriter(DataWriter):
 
     def __init__(self, servers: list[str], topic: str, output_format: str, output_config: dict,
-                 options: dict = None):
+                 options: dict = None, **kwargs):
         self.servers = servers
         self.topic = topic
         self.options = options or {}

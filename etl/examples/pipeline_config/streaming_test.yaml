@@ -1,0 +1,44 @@
+pipeline:
+  name: "dummy_test"
+  type: batch
+  reader:
+    type: "kafka"
+    config:
+      options:
+        kafka.bootstrap.servers: "localhost:9092"
+        subscribePattern: "data_topic"
+        startingOffsets: 'earliest'
+      post_read_select_exprs:
+#        - "topic"
+#        - "partition"
+#        - "offset"
+#        - "timestamp"
+        - "value.*"
+#      post_read_filter_expr: "license_name != 'Juno'"
+    input:
+      format: "json"
+      config:
+        schema_filepath: "./examples/schema_config/licences_json_schema.json"
+
+  transformations:
+#    - klass: "etl.impl.transformers.transformers.GroupByFirstTransformer"
+#      props:
+#        grouping_key: "licence_id"
+#        agg_column: "license_name"
+    - klass: "etl.impl.transformers.transformers.DateTransformer"
+
+
+  writer:
+    type: "s3"
+    config:
+      ###
+      for_each_batch: True
+      checkpoint_location: "./etl/checkpoint/"
+      ###
+      bucket: "nalexx6-dlt-bucket"
+      object_key: "licenses-processed-stream"
+    output:
+      format: "parquet"
+      config:
+        mode: "append"
+

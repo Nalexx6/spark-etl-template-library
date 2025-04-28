@@ -1,26 +1,21 @@
 from typing import List
 
-from etl.impl.readers.reader_interface import DataReader
+from etl.impl.readers.stream.stream_data_reader import StreamDataReader
+from etl.impl.transformers.transformers_factory import create_transformers
+from etl.impl.writers.stream_data_writer import StreamDataWriter
 from etl.interfaces import DataTransformer, DataWriter
 from pyspark.sql import SparkSession
 
 from etl.metadata.pipeline_schema import PipelineMetadata
 
-from etl.impl.transformers.transformers_factory import create_transformers
-from etl.impl.readers.reader_factory import create_reader
-from etl.impl.writers.writer_factory import create_writer
 
-
-class BatchPipelineRunner:
+class StreamPipelineRunner:
     def __init__(self, spark: SparkSession, metadata: PipelineMetadata):
-
         self.spark = spark
 
-        self.reader = create_reader(metadata.reader.type, metadata.reader.config,
-                                    metadata.reader.input)
+        self.reader = StreamDataReader(reader_format=metadata.reader.type, input=metadata.reader.input, **metadata.reader.config)
         self.transformers = create_transformers(metadata.transformations)
-        self.writer = create_writer(metadata.writer.type, metadata.writer.config,
-                                    metadata.writer.output)
+        self.writer = StreamDataWriter(metadata.writer.type, metadata.writer.config, metadata.writer.output)
 
     def run(self):
         df = self.reader.read(self.spark)

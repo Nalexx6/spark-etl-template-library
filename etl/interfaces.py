@@ -11,6 +11,9 @@ class DataTransformer(ABC):
 
 class DataWriter(ABC):
 
+    def __call__(self, df: DataFrame, epoch_id) -> None:
+        self.write(df)
+
     @abstractmethod
     def write(self, df: DataFrame) -> None:
         pass

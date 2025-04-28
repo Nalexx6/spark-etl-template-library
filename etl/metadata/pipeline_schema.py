@@ -31,6 +31,7 @@ class TransformerConfig(BaseModel):
 
 class PipelineMetadata(BaseModel):
     name: str
+    type: Literal["batch", "stream"]
     reader: ReaderConfig
     # TODO: support chain of transformers
     transformations: Optional[List[TransformerConfig]] = []
