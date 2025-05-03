@@ -39,9 +39,16 @@ class GroupByFirstTransformer(DataTransformer):
         return df_tr
 
 
-class GenericTransformer:
+class TaxiMetadataTransformer(DataTransformer):
 
-    # props: dict(str, str),
-    # get col names, operations from props
-    # general props structure
-    pass
+    def transform(self, df: DataFrame) -> DataFrame:
+        df_enriched = (df.withColumn('pickup_day_of_week', f.dayofweek(df['pickup_datetime']))
+                         .withColumn('pickup_day', f.dayofmonth(df['pickup_datetime']))
+                         .withColumn('pickup_hour', f.hour(df['pickup_datetime']))
+                         .withColumn('dropoff_day_of_week', f.dayofweek(df['dropoff_datetime']))
+                         .withColumn('dropoff_day', f.dayofmonth(df['dropoff_datetime']))
+                         .withColumn('dropoff_hour', f.hour(df['dropoff_datetime'])))
+
+        return df_enriched
+    
+

@@ -1,0 +1,34 @@
+pipeline:
+  name: "taxi_trip_streaming"
+  type: stream
+  reader:
+    type: "kafka"
+    config:
+      options:
+        kafka.bootstrap.servers: "localhost:9092"
+        subscribePattern: "data_topic"
+        startingOffsets: 'earliest'
+      post_read_select_exprs:
+        - "value.*"
+      post_read_filter_expr: "hvfhs_license_num is not null"
+    input:
+      format: "json"
+      config:
+        schema_filepath: "./config/bachelor_etl_migration/schema/taxi_trip_json_schema.json"
+
+  transformations:
+    - klass: "etl.impl.transformers.transformers.TaxiMetadataTransformer"
+
+  writer:
+    type: "s3"
+    config:
+      ###
+      for_each_batch: True
+      checkpoint_location: "./etl/checkpoint/"
+      ###
+      bucket: "nalexx6-dlt-bucket"
+      object_key: "data/storage/trips_data.parquet"
+    output:
+      format: "parquet"
+      config:
+        mode: "overwrite"
