@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 class S3Reader(BatchDataReader):
     def __init__(self, bucket: str, object_key: str, input_format: str, input_config: dict, **kwargs):
         path = f"s3a://{bucket}/{object_key}"
-        logger.info(f"Initializing {input_format} input connector with {path} path")
         self.data_input = create_input_connector(input_format=input_format, path=path, **input_config)
 
         super().__init__(**kwargs)

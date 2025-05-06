@@ -17,14 +17,13 @@ class ConsoleWriter(DataWriter):
         pass
 
     def write(self, df: DataFrame) -> None:
-        df.show(truncate=False)
+        df.show(n=100, truncate=False)
 
 
 class S3Writer(DataWriter):
 
     def __init__(self, bucket: str, object_key: str, output_format: str, output_config: dict, **kwargs):
         path = f"s3a://{bucket}/{object_key}"
-        logger.info(f"Initializing {output_format} output connector with {path} path")
         self.data_output = create_output_connector(output_format=output_format, path=path, **output_config)
 
     def write(self, df: DataFrame) -> None:
@@ -34,7 +33,6 @@ class S3Writer(DataWriter):
 class HdfsWriter(DataWriter):
     def __init__(self, server_url: str, path: str, output_format: str, output_config: dict, **kwargs):
         path = f"hdfs://{server_url}/{path}"
-        logger.info(f"Initializing {output_format} output connector with {path} path")
         self.data_output = create_output_connector(output_format=output_format, path=path, **output_config)
 
     def write(self, df: DataFrame) -> None:

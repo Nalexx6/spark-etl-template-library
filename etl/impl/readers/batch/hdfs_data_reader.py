@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 class HdfsReader(BatchDataReader):
     def __init__(self, server_url: str, path: str, input_format: str, input_config: dict, **kwargs):
         path = f"hdfs://{server_url}/{path}"
-        logger.info(f"Initializing {input_format} input connector with {path} path")
         self.data_input = create_input_connector(input_format=input_format, path=path, **input_config)
 
         super().__init__(**kwargs)

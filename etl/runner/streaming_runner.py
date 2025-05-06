@@ -23,7 +23,6 @@ class StreamPipelineRunner:
         # Apply each transformer in sequence
         df_transformed = df
         for t in self.transformers:
-            df_transformed = t.transform(df_transformed)
+            df_transformed = t.transform(df_transformed, spark=self.spark)
 
         self.writer.write(df_transformed)
-

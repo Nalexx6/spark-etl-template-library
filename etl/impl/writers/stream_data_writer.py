@@ -20,8 +20,11 @@ class StreamDataWriter(DataWriter):
             logger.info(f"foreachBatch option enabled. Loading batch writer for {writer_format} format")
             self.batch_writer = create_writer(writer_format, writer_config, output)
         else:
+            self.batch_writer = None
             if writer_format == "kafka":
                 self.encoder_func = su.encode_value(output.format, output.config.get("schema_filepath"))
+            else:
+                self.encoder_func = None
 
         self.writer_format = writer_format
         self.checkpoint_location = writer_config.get("checkpoint_location")

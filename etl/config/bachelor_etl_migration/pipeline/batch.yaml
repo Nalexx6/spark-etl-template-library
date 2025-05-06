@@ -1,0 +1,29 @@
+pipeline:
+  name: "taxi_trip_bach_agg_metrics"
+  type: batch
+  reader:
+    type: "s3"
+    config:
+      bucket: "nalexx6-dlt-bucket"
+      object_key: "data/storage/trips_data.parquet"
+    input:
+      format: "parquet"
+
+  transformations:
+    - klass: "etl.impl.transformers.taxi_metadata_transformers.TaxiMetadataAggTransformer"
+      props:
+        bucket: nalexx6-dlt-bucket
+        licenses_metadata_path: "/data/storage/licenses.csv"
+        zones_metadata_path: "/data/storage/zones.csv"
+
+  writer:
+    type: "s3"
+    config:
+      bucket: "nalexx6-dlt-bucket"
+      object_key: "data/storage/trips_agg_data.parquet"
+    output:
+      format: "parquet"
+      config:
+        mode: "overwrite"
+
+

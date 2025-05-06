@@ -27,7 +27,7 @@ class DataReader(ABC):
         pass
 
     def post_read_select_and_filter(self, df: DataFrame) -> DataFrame:
-        logger.info(f"Applying post-read transformations. Select expression = {self.post_read_select_exprs},\n"
+        logger.info(f"Applying post-read transformations. Select expression = {self.post_read_select_exprs},"
                     f" Filter expression = {self.post_read_filter_expr} ")
 
         applied_df = df.selectExpr(*self.post_read_select_exprs) if self.post_read_select_exprs else df

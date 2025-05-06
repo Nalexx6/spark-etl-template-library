@@ -17,18 +17,19 @@ pipeline:
         schema_filepath: "./config/bachelor_etl_migration/schema/taxi_trip_json_schema.json"
 
   transformations:
-    - klass: "etl.impl.transformers.transformers.TaxiMetadataTransformer"
+    - klass: "etl.impl.transformers.taxi_metadata_transformers.TaxiMetadataPreprocessTransformer"
 
   writer:
     type: "s3"
     config:
       ###
       for_each_batch: True
-      checkpoint_location: "./etl/checkpoint/"
+      checkpoint_location: "./checkpoint/"
       ###
       bucket: "nalexx6-dlt-bucket"
       object_key: "data/storage/trips_data.parquet"
     output:
       format: "parquet"
       config:
-        mode: "overwrite"
+        mode: "append"
+

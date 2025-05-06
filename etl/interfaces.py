@@ -4,7 +4,7 @@ from pyspark.sql import DataFrame, SparkSession
 
 class DataTransformer(ABC):
     @abstractmethod
-    def transform(self, df: DataFrame) -> DataFrame:
+    def transform(self, df: DataFrame, spark: SparkSession = None) -> DataFrame:
         """Apply transformations to the input DataFrame"""
         pass
 

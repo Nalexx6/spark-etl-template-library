@@ -10,13 +10,10 @@ from etl.metadata.parser import load_pipeline_metadata
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Run ETL pipeline from config")
-    parser.add_argument("--config", required=True, help="Path to YAML pipeline config file.")
-    args = parser.parse_args()
+def run(config_path: str):
 
-    metadata = load_pipeline_metadata(args.config)
+    metadata = load_pipeline_metadata(config_path)
 
     spark = su.create_spark_session(metadata.name, local=True)
 
@@ -34,3 +31,13 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
         raise e
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Run ETL pipeline from config")
+    parser.add_argument("--config", required=True, help="Path to YAML pipeline config file.")
+    args = parser.parse_args()
+
+
+    run(args.config)
