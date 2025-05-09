@@ -1,11 +1,11 @@
 import logging
 
-from etl.impl.readers.reader_interface import DataReader
+from etl.readers.reader_interface import DataReader
 from etl.metadata.pipeline_schema import InputConfig
 
-from etl.impl.readers.batch.s3_data_reader import S3Reader
-from etl.impl.readers.batch.hdfs_data_reader import HdfsReader
-from etl.impl.readers.batch.kafka_data_reader import KafkaReader
+from etl.readers.batch.s3_data_reader import S3Reader
+from etl.readers.batch.hdfs_data_reader import HdfsReader
+from etl.readers.batch.kafka_data_reader import KafkaReader
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

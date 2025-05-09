@@ -1,7 +1,7 @@
 import logging
 
 from etl.interfaces import DataOutput
-import etl.impl.outputs.outputs as op
+import etl.outputs.outputs as op
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -5,7 +5,7 @@ from etl.utils import reflection_utils as ru
 
 from etl.interfaces import DataTransformer
 from etl.metadata.pipeline_schema import TransformerConfig
-import etl.impl.transformers.transformers as tr
+import etl.transformers.transformers as tr
 
 
 logging.basicConfig(level=logging.INFO)

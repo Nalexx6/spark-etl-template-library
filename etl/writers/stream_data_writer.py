@@ -2,7 +2,7 @@ from etl.interfaces import DataWriter
 from pyspark.sql import DataFrame
 
 import etl.utils.schema_utils as su
-from etl.impl.writers.writer_factory import create_writer
+from etl.writers.writer_factory import create_writer
 
 import logging
 

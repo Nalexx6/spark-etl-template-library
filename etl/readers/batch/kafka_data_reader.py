@@ -1,4 +1,4 @@
-from etl.impl.readers.batch.batch_data_reader import BatchDataReader
+from etl.readers.batch.batch_data_reader import BatchDataReader
 from pyspark.sql import DataFrame, SparkSession
 
 import etl.utils.schema_utils as su

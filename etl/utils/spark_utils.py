@@ -2,7 +2,6 @@ import os
 
 from pyspark.sql import SparkSession
 
-
 def create_spark_session(app_name, local=False):
     packages = [
         'org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.0',

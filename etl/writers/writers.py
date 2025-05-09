@@ -1,5 +1,5 @@
 from etl.interfaces import DataWriter
-from etl.impl.outputs.outputs_factory import create_output_connector
+from etl.outputs.outputs_factory import create_output_connector
 from pyspark.sql import DataFrame
 import pyspark.sql.functions as f
 

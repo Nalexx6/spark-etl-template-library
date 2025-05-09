@@ -2,7 +2,7 @@ import logging
 
 from etl.interfaces import DataWriter
 from etl.metadata.pipeline_schema import OutputConfig
-import etl.impl.writers.writers as wr
+import etl.writers.writers as wr
 
 
 logging.basicConfig(level=logging.INFO)

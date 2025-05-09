@@ -17,7 +17,7 @@ pipeline:
         schema_filepath: "./config/bachelor_etl_migration/schema/taxi_trip_json_schema.json"
 
   transformations:
-    - klass: "etl.impl.transformers.taxi_metadata_transformers.TaxiMetadataPreprocessTransformer"
+    - klass: "etl.transformers.taxi_metadata_transformers.TaxiMetadataPreprocessTransformer"
 
   writer:
     type: "s3"

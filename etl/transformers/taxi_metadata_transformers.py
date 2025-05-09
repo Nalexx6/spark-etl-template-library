@@ -1,7 +1,7 @@
 from etl.interfaces import DataTransformer
 from pyspark.sql import DataFrame, functions as f, Window, SparkSession
 
-from etl.impl.inputs.inputs_factory import create_input_connector
+from etl.inputs.inputs_factory import create_input_connector
 
 import logging
 

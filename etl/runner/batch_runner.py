@@ -1,14 +1,10 @@
-from typing import List
-
-from etl.impl.readers.reader_interface import DataReader
-from etl.interfaces import DataTransformer, DataWriter
 from pyspark.sql import SparkSession
 
 from etl.metadata.pipeline_schema import PipelineMetadata
 
-from etl.impl.transformers.transformers_factory import create_transformers
-from etl.impl.readers.reader_factory import create_reader
-from etl.impl.writers.writer_factory import create_writer
+from etl.transformers.transformers_factory import create_transformers
+from etl.readers.reader_factory import create_reader
+from etl.writers.writer_factory import create_writer
 
 
 class BatchPipelineRunner:

@@ -10,7 +10,7 @@ pipeline:
       format: "parquet"
 
   transformations:
-    - klass: "etl.impl.transformers.taxi_metadata_transformers.TaxiMetadataAggTransformer"
+    - klass: "etl.transformers.taxi_metadata_transformers.TaxiMetadataAggTransformer"
       props:
         bucket: nalexx6-dlt-bucket
         licenses_metadata_path: "/data/storage/licenses.csv"
