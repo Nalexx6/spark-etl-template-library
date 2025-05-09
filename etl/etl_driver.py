@@ -1,6 +1,8 @@
 
 import argparse, logging
 
+import etl.utils as ut
+from etl.registry.registry import Registry
 from etl.utils import spark_utils as su
 from etl.runner import batch_runner as bd
 from etl.runner import streaming_runner as st
@@ -15,16 +17,16 @@ logger = logging.getLogger(__name__)
 class ETLDriver:
 
     def __init__(self):
-        parser = argparse.ArgumentParser(description="Run ETL pipeline from config")
-        parser.add_argument("--config", required=True, help="Path to YAML pipeline config file.")
-        args = parser.parse_args()
+        args = ut.get_etl_args()
 
         self.metadata = load_pipeline_metadata(args.config)
+
+        self.registry = Registry(args.registry)
 
         self.spark = su.create_spark_session(self.metadata.name, local=True)
 
         if self.metadata.type == "batch":
-            self.driver = bd.BatchPipelineRunner(self.spark, self.metadata)
+            self.driver = bd.BatchPipelineRunner(self.spark, self.metadata, self.registry)
         else:
             self.driver = st.StreamPipelineRunner(self.spark, self.metadata)
 

@@ -1,0 +1,3 @@
+registry:
+  readers:
+    s3: etl.readers.batch.s3_data_reader.S3Reader

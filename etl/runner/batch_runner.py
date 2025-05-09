@@ -1,18 +1,18 @@
 from pyspark.sql import SparkSession
 
 from etl.metadata.pipeline_schema import PipelineMetadata
+from etl.registry.registry import Registry
 
 from etl.transformers.transformers_factory import create_transformers
-from etl.readers.reader_factory import create_reader
 from etl.writers.writer_factory import create_writer
 
 
 class BatchPipelineRunner:
-    def __init__(self, spark: SparkSession, metadata: PipelineMetadata):
+    def __init__(self, spark: SparkSession, metadata: PipelineMetadata, registry: Registry):
 
         self.spark = spark
 
-        self.reader = create_reader(metadata.reader.type, metadata.reader.config,
+        self.reader = registry.reader_factory.create_reader(metadata.reader.type, metadata.reader.config,
                                     metadata.reader.input)
         self.transformers = create_transformers(metadata.transformations)
         self.writer = create_writer(metadata.writer.type, metadata.writer.config,

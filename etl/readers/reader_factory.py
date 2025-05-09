@@ -10,22 +10,33 @@ from etl.readers.batch.kafka_data_reader import KafkaReader
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-READER_REGISTRY = {
-    "s3": S3Reader,
-    "hdfs": HdfsReader,
-    "kafka": KafkaReader
-}
 
+class ReaderFactory:
 
-def create_reader(reader_type: str, reader_config: dict,  input: InputConfig) -> DataReader:
+    def __init__(self, additional_registry: dict[str, DataReader] = None):
 
-    (input_format, input_config) = (input.format, input.config) if input else (None, None)
+        if additional_registry is None:
+            additional_registry = {}
 
-    connector_cls = READER_REGISTRY.get(reader_type.lower())
-    if not connector_cls:
-        raise ValueError(f"Unsupported input connector type: {reader_type}")
+        default_registry = {
+            "s3": S3Reader,
+            "hdfs": HdfsReader,
+            "kafka": KafkaReader
+        }
 
-    logger.info(f"Initializing {reader_type} reader object with options: {reader_config},"
-                f" input format: {input_format},"
-                f" input config: {input_config} ")
-    return connector_cls(input_format=input_format, input_config=input_config, **reader_config)
+        self.reader_registry = default_registry | additional_registry
+
+        logger.info(self.reader_registry)
+
+    def create_reader(self, reader_type: str, reader_config: dict,  input: InputConfig) -> DataReader:
+
+        (input_format, input_config) = (input.format, input.config) if input else (None, None)
+
+        connector_cls = self.reader_registry.get(reader_type.lower())
+        if not connector_cls:
+            raise ValueError(f"Unsupported input connector type: {reader_type}")
+
+        logger.info(f"Initializing {reader_type} reader object with options: {reader_config},"
+                    f" input format: {input_format},"
+                    f" input config: {input_config} ")
+        return connector_cls(input_format=input_format, input_config=input_config, **reader_config)
