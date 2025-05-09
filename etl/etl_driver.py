@@ -12,33 +12,34 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def run(config_path: str):
+class ETLDriver:
 
-    metadata = load_pipeline_metadata(config_path)
+    def __init__(self):
+        parser = argparse.ArgumentParser(description="Run ETL pipeline from config")
+        parser.add_argument("--config", required=True, help="Path to YAML pipeline config file.")
+        args = parser.parse_args()
 
-    spark = su.create_spark_session(metadata.name, local=True)
+        self.metadata = load_pipeline_metadata(args.config)
 
-    if metadata.type == "batch":
-        driver = bd.BatchPipelineRunner(spark, metadata)
-    else:
-        driver = st.StreamPipelineRunner(spark, metadata)
+        self.spark = su.create_spark_session(self.metadata.name, local=True)
 
-    try:
-        driver.run()
-        logger.info(f"{metadata.name} task completed successfully.")
-    except ValueError as e:
-        logger.error(f"Error: {e}")
-        raise e
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
-        raise e
+        if self.metadata.type == "batch":
+            self.driver = bd.BatchPipelineRunner(self.spark, self.metadata)
+        else:
+            self.driver = st.StreamPipelineRunner(self.spark, self.metadata)
+
+    def run(self) -> None:
+        try:
+            self.driver.run()
+            logger.info(f"{self.metadata.name} task completed successfully.")
+        except ValueError as e:
+            logger.error(f"Error: {e}")
+            raise e
+        except Exception as e:
+            logger.error(f"An unexpected error occurred: {e}")
+            raise e
 
 
 if __name__ == "__main__":
+    ETLDriver().run()
 
-    parser = argparse.ArgumentParser(description="Run ETL pipeline from config")
-    parser.add_argument("--config", required=True, help="Path to YAML pipeline config file.")
-    args = parser.parse_args()
-
-
-    run(args.config)
