@@ -1,5 +1,5 @@
 
-import argparse, logging
+import logging
 
 import etl.utils as ut
 from etl.registry.registry import Registry
@@ -8,7 +8,7 @@ from etl.runner import batch_runner as bd
 from etl.runner import streaming_runner as st
 
 
-from etl.metadata.parser import load_pipeline_metadata
+from etl.metadata import load_pipeline_metadata
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class ETLDriver:
 
         self.registry = Registry(args.registry)
 
-        self.spark = su.create_spark_session(self.metadata.name, local=True)
+        self.spark = su.create_spark_session(self.metadata.name, local=True, add_spark_conf_path=args.spark_conf)
 
         if self.metadata.type == "batch":
             self.driver = bd.BatchPipelineRunner(self.spark, self.metadata, self.registry)
