@@ -1,5 +1,5 @@
 from etl.interfaces import DataTransformer
-from pyspark.sql import DataFrame, functions as f
+from pyspark.sql import DataFrame, SparkSession, functions as f
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -7,12 +7,12 @@ logger = logging.getLogger(__name__)
 
 
 class NoOpTransformer(DataTransformer):
-    def transform(self, df: DataFrame) -> DataFrame:
+    def transform(self, df: DataFrame, spark: SparkSession = None) -> DataFrame:
         return df  # No transformation
 
 
 class TimestampTransformer(DataTransformer):
-    def transform(self, df: DataFrame) -> DataFrame:
+    def transform(self, df: DataFrame, spark: SparkSession = None) -> DataFrame:
         df_tr = df.withColumn("cur_timestamp", f.current_timestamp())
         df_tr.show()
 
@@ -20,7 +20,7 @@ class TimestampTransformer(DataTransformer):
 
 
 class DateTransformer(DataTransformer):
-    def transform(self, df: DataFrame) -> DataFrame:
+    def transform(self, df: DataFrame, spark: SparkSession = None) -> DataFrame:
         df_tr = df.withColumn("cur_date", f.current_date())
         # df_tr.show()
 
@@ -33,7 +33,7 @@ class GroupByFirstTransformer(DataTransformer):
         self.grouping_key = grouping_key
         self.agg_column = agg_column
 
-    def transform(self, df: DataFrame) -> DataFrame:
+    def transform(self, df: DataFrame, spark: SparkSession = None) -> DataFrame:
         df_tr = df.groupby(self.grouping_key).agg(f.first(col=self.agg_column).alias(self.agg_column))
 
         return df_tr

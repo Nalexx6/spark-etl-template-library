@@ -1,8 +1,8 @@
 pipeline:
   name: "taxi_trip_streaming"
-  type: stream
+  type: batch
   reader:
-    type: "kafka"
+    type: "s3"
     config:
       options:
         kafka.bootstrap.servers: "localhost:9092"
@@ -31,5 +31,5 @@ pipeline:
     output:
       format: "parquet"
       config:
-        mode: "append"
+        mode: "overwrite"
 

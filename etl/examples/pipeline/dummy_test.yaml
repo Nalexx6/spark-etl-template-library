@@ -1,0 +1,25 @@
+pipeline:
+  name: "dummy_test"
+  type: batch
+  reader:
+    type: "local"
+    config:
+      path: "./examples/storage/licenses.csv"
+      post_read_select_exprs:
+        - "Hvfhs_license_num as licence_id"
+        - "license as license_name"
+      post_read_filter_expr: "license_name != 'Juno'"
+    input:
+      format: "csv"
+
+  transformations:
+    - klass: "etl.transformers.transformers.GroupByFirstTransformer"
+      props:
+        grouping_key: "licence_id"
+        agg_column: "license_name"
+    - klass: "etl.transformers.transformers.DateTransformer"
+
+
+  writer:
+    type: console
+

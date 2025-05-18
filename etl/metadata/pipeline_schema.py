@@ -3,23 +3,23 @@ from typing import List, Optional, Literal, Dict
 
 
 class InputConfig(BaseModel):
-    format: Literal["csv", "parquet", "avro", "json"]
+    format: str
     config: Optional[Dict] = {}
 
 
 class ReaderConfig(BaseModel):
-    type: Literal["s3", "hdfs", "kafka"]
+    type: str
     config: Optional[Dict] = {}
     input: Optional[InputConfig] = None
 
 
 class OutputConfig(BaseModel):
-    format: Literal["csv", "parquet", "avro", "json"]
+    format: str
     config: Optional[Dict] = {}
 
 
 class WriterConfig(BaseModel):
-    type: Literal["console", "s3", "hdfs", "kafka"]
+    type: str
     config: Optional[Dict] = {}
     output: Optional[OutputConfig] = None
 

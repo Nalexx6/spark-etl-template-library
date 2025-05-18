@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class CsvOutput(DataOutput, s.CSVSourceMixin):
 
-    def __init__(self, path: str, mode: str = "overwrite", header: bool = True, options: dict = None):
+    def __init__(self, path: str, mode: str = "append", header: bool = True, options: dict = None):
         self.mode = mode
         super().__init__(path, header, options=options)
 
@@ -20,7 +20,7 @@ class CsvOutput(DataOutput, s.CSVSourceMixin):
 
 class ParquetOutput(DataOutput, s.FileSourceMixin):
 
-    def __init__(self, path: str, mode: str = "overwrite", options: dict = None):
+    def __init__(self, path: str, mode: str = "append", options: dict = None):
         self.mode = mode
         super().__init__(path, options=options)
 
@@ -43,3 +43,18 @@ class KafkaOutput(DataOutput):
           .option("topic", self.topic) \
           .options(**self.options) \
           .save()
+
+
+class DeltaLakeOutput(DataOutput):
+
+    def __init__(self, path: str, mode: str = "append", options: dict = None, **kwargs):
+        self.path = path
+        self.mode = mode
+        self.options = options or {}
+
+    def write(self, df: DataFrame):
+        df.write \
+            .format("delta") \
+            .options(**self.options) \
+            .mode(self.mode) \
+            .save(self.path)

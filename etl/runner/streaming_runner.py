@@ -1,4 +1,5 @@
 from etl.readers.stream.stream_data_reader import StreamDataReader
+from etl.registry import Registry
 from etl.transformers.transformers_factory import create_transformers
 from etl.writers.stream_data_writer import StreamDataWriter
 from pyspark.sql import SparkSession
@@ -7,10 +8,11 @@ from etl.metadata.pipeline_schema import PipelineMetadata
 
 
 class StreamPipelineRunner:
-    def __init__(self, spark: SparkSession, metadata: PipelineMetadata):
+    def __init__(self, spark: SparkSession, metadata: PipelineMetadata, registry: Registry):
         self.spark = spark
 
-        self.reader = StreamDataReader(reader_format=metadata.reader.type, input=metadata.reader.input, **metadata.reader.config)
+        self.reader = StreamDataReader(reader_format=metadata.reader.type, input=metadata.reader.input,
+                                       **metadata.reader.config)
         self.transformers = create_transformers(metadata.transformations)
         self.writer = StreamDataWriter(metadata.writer.type, metadata.writer.config, metadata.writer.output)
 

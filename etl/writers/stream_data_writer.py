@@ -2,7 +2,7 @@ from etl.interfaces import DataWriter
 from pyspark.sql import DataFrame
 
 import etl.utils.schema_utils as su
-from etl.writers.writer_factory import create_writer
+from etl.registry import Registry
 
 import logging
 
@@ -14,11 +14,11 @@ logger = logging.getLogger(__name__)
 
 class StreamDataWriter(DataWriter):
 
-    def __init__(self, writer_format: str, writer_config: dict, output: OutputConfig = None):
+    def __init__(self, registry: Registry, writer_format: str, writer_config: dict, output: OutputConfig = None):
 
         if writer_config.get("for_each_batch"):
             logger.info(f"foreachBatch option enabled. Loading batch writer for {writer_format} format")
-            self.batch_writer = create_writer(writer_format, writer_config, output)
+            self.batch_writer = registry.writer_factory.create_writer(writer_format, writer_config, output)
         else:
             self.batch_writer = None
             if writer_format == "kafka":

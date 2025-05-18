@@ -10,20 +10,21 @@ pipeline:
       format: "parquet"
 
   transformations:
-    - klass: "etl.transformers.taxi_metadata_transformers.TaxiMetadataAggTransformer"
+    - klass: "transformers.taxi_metadata_transformers.TaxiMetadataAggTransformer"
       props:
         bucket: nalexx6-dlt-bucket
         licenses_metadata_path: "/data/storage/licenses.csv"
         zones_metadata_path: "/data/storage/zones.csv"
 
   writer:
-    type: "s3"
+    type: "postgres"
     config:
-      bucket: "nalexx6-dlt-bucket"
-      object_key: "data/storage/trips_agg_data.parquet"
+      host: "localhost"
+      port: "5432"
+      table_name: test_schema.taxi_metrics_agg
     output:
-      format: "parquet"
       config:
         mode: "overwrite"
+
 
 

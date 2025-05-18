@@ -2,10 +2,9 @@
 import logging
 
 import etl.utils as ut
-from etl.registry.registry import Registry
+from etl.registry import Registry
 from etl.utils import spark_utils as su
-from etl.runner import batch_runner as bd
-from etl.runner import streaming_runner as st
+from etl.runner import create_runner
 
 
 from etl.metadata import load_pipeline_metadata
@@ -19,20 +18,18 @@ class ETLDriver:
     def __init__(self):
         args = ut.get_etl_args()
 
-        self.metadata = load_pipeline_metadata(args.config)
-
         self.registry = Registry(args.registry)
+
+        self.metadata = load_pipeline_metadata(args.config)
 
         self.spark = su.create_spark_session(self.metadata.name, local=True, add_spark_conf_path=args.spark_conf)
 
-        if self.metadata.type == "batch":
-            self.driver = bd.BatchPipelineRunner(self.spark, self.metadata, self.registry)
-        else:
-            self.driver = st.StreamPipelineRunner(self.spark, self.metadata)
+        self.runner = create_runner(self.metadata.type, self.spark, self.metadata, self.registry)
 
     def run(self) -> None:
         try:
-            self.driver.run()
+            logger.info(f"{self.metadata.name} task started.")
+            self.runner.run()
             logger.info(f"{self.metadata.name} task completed successfully.")
         except ValueError as e:
             logger.error(f"Error: {e}")

@@ -13,7 +13,11 @@ def create_spark_session(app_name: str, add_spark_conf_path: str = None, local=F
     default_packages = [
         'org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.0',
         'org.postgresql:postgresql:42.5.1',
-        "org.apache.spark:spark-avro_2.12:3.4.0"
+        "org.apache.spark:spark-avro_2.12:3.4.0",
+        "org.apache.iceberg:iceberg-spark-runtime-3.4_2.12:1.3.1",
+        "io.delta:delta-spark_2.12:2.4.0",
+        "org.postgresql:postgresql:42.6.0",
+        "com.datastax.spark:spark-cassandra-connector_2.12:3.4.0",
     ]
 
     if add_spark_conf_path:
@@ -21,18 +25,26 @@ def create_spark_session(app_name: str, add_spark_conf_path: str = None, local=F
     else:
         add_spark_conf = {}
 
-    packages = default_packages + add_spark_conf.pop("spark.jars.packages", [])
-
-    spark_conf = {
-        'spark.hadoop.fs.s3a.endpoint': 'http://s3.eu-west-1.amazonaws.com',
-        'spark.hadoop.fs.s3a.aws.credentials.provider': 'org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider',
-        'spark.sql.session.timeZone': 'UTC',
-        'spark.default.parallelism': 20,
-        "spark.jars.packages": ",".join(packages),
-        "spark.hadoop.fs.s3a.access.key": os.getenv("AWS_ACCESS_KEY_ID", "no-access-key-provided"),
-        "spark.hadoop.fs.s3a.secret.key": os.getenv("AWS_SECRET_ACCESS_KEY", "no-secret-access-key-provided"),
-        **add_spark_conf
-    }
+    if add_spark_conf.get("use_builtin", False):
+        packages = default_packages + add_spark_conf.pop("spark.jars.packages", [])
+        spark_conf = {
+            'spark.hadoop.fs.s3a.endpoint': 'http://s3.eu-west-1.amazonaws.com',
+            'spark.hadoop.fs.s3a.aws.credentials.provider': 'org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider',
+            'spark.sql.session.timeZone': 'UTC',
+            'spark.default.parallelism': 20,
+            "spark.jars.packages": ",".join(packages),
+            "spark.hadoop.fs.s3a.access.key": os.getenv("AWS_ACCESS_KEY_ID", "no-access-key-provided"),
+            "spark.hadoop.fs.s3a.secret.key": os.getenv("AWS_SECRET_ACCESS_KEY", "no-secret-access-key-provided"),
+            "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+            "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+            **add_spark_conf
+        }
+    else:
+        packages = add_spark_conf.pop("spark.jars.packages", [])
+        spark_conf = {
+            "spark.jars.packages": ",".join(packages),
+            **add_spark_conf
+        }
 
     builder = (SparkSession
                .builder

@@ -38,3 +38,16 @@ class JsonInput(DataInput, s.FileSourceMixin):
         return df
 
 
+class DeltaLakeInput(DataInput):
+    def __init__(self, path: str, options: dict = None, **kwargs):
+        self.path = path
+        self.options = options or {}
+        super().__init__(**kwargs)
+
+    def read(self, spark: SparkSession) -> DataFrame:
+        return spark.read \
+            .format("delta") \
+            .options(**self.options) \
+            .load(self.path)
+
+

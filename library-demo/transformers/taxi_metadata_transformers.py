@@ -1,7 +1,7 @@
 from etl.interfaces import DataTransformer
 from pyspark.sql import DataFrame, functions as f, Window, SparkSession
 
-from etl.inputs.inputs_factory import create_input_connector
+from etl.inputs.input_factory import InputFactory
 
 import logging
 
@@ -24,9 +24,11 @@ class TaxiMetadataPreprocessTransformer(DataTransformer):
 
 class TaxiMetadataAggTransformer(DataTransformer):
 
-    def __init__(self, bucket: str, licenses_metadata_path: str, zones_metadata_path: str):
+    def __init__(self, bucket: str, licenses_metadata_path: str, zones_metadata_path: str,
+                 input_factory: InputFactory = InputFactory()):
         self.licenses_metadata_path = f"s3a://{bucket}/{licenses_metadata_path}"
         self.zones_metadata_path = f"s3a://{bucket}/{zones_metadata_path}"
+        self.input_factory = input_factory
 
     def transform(self, df: DataFrame, spark: SparkSession = None) -> DataFrame:
         df = df.cache()
@@ -97,7 +99,7 @@ class TaxiMetadataAggTransformer(DataTransformer):
         return unified_buckets
 
     def get_trips_metadata(self, spark: SparkSession) -> (DataFrame, DataFrame):
-        licenses_df = create_input_connector("csv", path=self.licenses_metadata_path).read(spark)
-        zones_df = create_input_connector("csv", path=self.zones_metadata_path).read(spark)
+        licenses_df = self.input_factory.create_input_connector("csv", path=self.licenses_metadata_path).read(spark)
+        zones_df = self.input_factory.create_input_connector("csv", path=self.zones_metadata_path).read(spark)
 
         return licenses_df, zones_df
