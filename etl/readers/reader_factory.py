@@ -6,7 +6,7 @@ from etl.readers.batch.iceberg_reader import IcebergReader
 from etl.readers.batch.local_reader import LocalReader
 from etl.readers.batch.postgres_reader import PostgresReader
 from etl.readers.batch.redshift_reader import RedshiftReader
-from etl.readers.reader_interface import DataReader
+from etl.interfaces import DataReader
 from etl.metadata.pipeline_schema import InputConfig
 
 from etl.readers.batch.s3_data_reader import S3Reader
@@ -15,6 +15,7 @@ from etl.readers.batch.kafka_data_reader import KafkaReader
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class ReaderFactory:
 

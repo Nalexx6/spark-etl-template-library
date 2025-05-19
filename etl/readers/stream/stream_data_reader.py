@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession, DataFrame
 
 import etl.utils.schema_utils as su
-from etl.readers.reader_interface import DataReader
+from etl.interfaces import DataReader
 
 import logging
 

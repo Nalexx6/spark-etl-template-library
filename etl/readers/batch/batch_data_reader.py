@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession, DataFrame
 from abc import abstractmethod
 
-from etl.readers.reader_interface import DataReader
+from etl.interfaces import DataReader
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -21,6 +21,3 @@ class BatchDataReader(DataReader):
         post_read_transform_df = self.post_read_select_and_filter(post_read_flatten_df)
 
         return post_read_transform_df
-
-
-
