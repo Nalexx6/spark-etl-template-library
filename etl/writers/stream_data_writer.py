@@ -18,7 +18,8 @@ class StreamDataWriter(DataWriter):
 
         if writer_config.get("for_each_batch"):
             logger.info(f"foreachBatch option enabled. Loading batch writer for {writer_format} format")
-            self.batch_writer = registry.writer_factory.create_writer(writer_format, writer_config, output)
+            self.batch_writer = registry.writer_factory.create_writer(writer_format, writer_config,
+                                                                      output, registry.output_factory)
         else:
             self.batch_writer = None
             if writer_format == "kafka":

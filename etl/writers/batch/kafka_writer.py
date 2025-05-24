@@ -1,4 +1,4 @@
-from pyspark.sql import DataFrame
+from pyspark.sql import DataFrame, functions as f
 from etl.interfaces import DataWriter
 
 import etl.utils.schema_utils as su

@@ -14,7 +14,7 @@ class StreamPipelineRunner:
         self.reader = StreamDataReader(reader_format=metadata.reader.type, input=metadata.reader.input,
                                        **metadata.reader.config)
         self.transformers = create_transformers(metadata.transformations)
-        self.writer = StreamDataWriter(metadata.writer.type, metadata.writer.config, metadata.writer.output)
+        self.writer = StreamDataWriter(registry, metadata.writer.type, metadata.writer.config, metadata.writer.output)
 
     def run(self):
         df = self.reader.read(self.spark)
